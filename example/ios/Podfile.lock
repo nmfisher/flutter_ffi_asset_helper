@@ -1,0 +1,22 @@
+PODS:
+  - ffi_path_helper (0.0.1):
+    - Flutter
+  - Flutter (1.0.0)
+
+DEPENDENCIES:
+  - ffi_path_helper (from `.symlinks/plugins/ffi_path_helper/ios`)
+  - Flutter (from `Flutter`)
+
+EXTERNAL SOURCES:
+  ffi_path_helper:
+    :path: ".symlinks/plugins/ffi_path_helper/ios"
+  Flutter:
+    :path: Flutter
+
+SPEC CHECKSUMS:
+  ffi_path_helper: 4c7ca94c764dfe48f227e7f56717a7bba7f58d41
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+
+COCOAPODS: 1.10.2
