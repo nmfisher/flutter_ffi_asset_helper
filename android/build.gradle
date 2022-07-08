@@ -43,8 +43,15 @@ android {
     defaultConfig {
         minSdkVersion 16
     }
+
+      externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'net.java.dev.jna:jna:4.4.0@aar'
 }

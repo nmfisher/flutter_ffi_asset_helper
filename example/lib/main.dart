@@ -1,11 +1,7 @@
 import 'dart:convert';
 import 'dart:ffi';
-
 import 'package:ffi_path_helper/ffi_path_helper_platform_interface.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:ffi_path_helper/ffi_path_helper.dart';
 
 void main() {
@@ -43,7 +39,7 @@ class _MyAppState extends State<MyApp> {
             child: const Text("Load"),
             onPressed: () async {
               _asset =
-                  await _ffiPathHelperPlugin.load("assets/some_test_asset.txt");
+                  await _ffiPathHelperPlugin.assetToByteArrayPointer("assets/some_test_asset.txt");
               setState(() {
                 var ptr = Pointer<Char>.fromAddress(_asset!.data);
                 var data = List.generate(
@@ -60,6 +56,13 @@ class _MyAppState extends State<MyApp> {
                 : () async {
                     await _ffiPathHelperPlugin.free(_asset!);
                   },
+          ),
+          ElevatedButton(
+            child: const Text("Get file descriptor"),
+            onPressed: () async {
+              var path = await _ffiPathHelperPlugin.getFdFromAsset("assets/some_test_asset2.txt");
+              await _ffiPathHelperPlugin.closeFd(path);
+            },
           ),
         ]),
       ),

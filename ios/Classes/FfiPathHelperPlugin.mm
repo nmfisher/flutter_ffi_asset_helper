@@ -1,8 +1,11 @@
 #import "FfiPathHelperPlugin.h"
 #include <iostream>     
 #include <fstream>      
+#include <map>
 
 using namespace std;
+
+static map<string, AAsset*> assets;
 
 @implementation FfiPathHelperPlugin {
   NSObject<FlutterPluginRegistrar>* _registrar;
@@ -19,7 +22,7 @@ using namespace std;
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
 
-    if ([@"load" isEqualToString:call.method]) {
+    if ([@"assetToByteArrayPointer" isEqualToString:call.method]) {
       NSLog(@"Loading asset at asset path %@", call.arguments);
       NSString* assetPath = call.arguments; 
       NSString* key = [_registrar lookupKeyForAsset:assetPath];
@@ -51,11 +54,13 @@ using namespace std;
       // AFAIK the only way to return a pointer via platform channel with a standard codec is to cast to long
       id objects[] = { [NSNumber numberWithLong:(long)buffer], [NSNumber numberWithInt:length] };
 
+      assets.insert({string([nsPath UTF8String]), buffer});
+
       result([NSArray arrayWithObjects:objects count:2]);
       NSLog(@"Successfully loaded asset at %@", call.arguments);
 
   } else if([@"free" isEqualToString:call.method]) {
-    NSLog(@"Freeing data at %lu", [call.arguments intValue]);
+    NSLog(@"Freeing data for path %@", call.arguments);
 
     free( (void*) [call.arguments longValue]);
     result([NSNumber numberWithBool:YES]);

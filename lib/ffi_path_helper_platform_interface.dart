@@ -5,8 +5,9 @@ import 'ffi_path_helper_method_channel.dart';
 class FFIAsset {
   final int data;
   final int length;
+  final String path;
 
-  FFIAsset(this.data, this.length);
+  FFIAsset(this.data, this.length, this.path);
 }
 
 abstract class FfiPathHelperPlatform extends PlatformInterface {
@@ -30,6 +31,8 @@ abstract class FfiPathHelperPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<FFIAsset> load(String path);
+  Future<FFIAsset> assetToByteArrayPointer(String path);
+  Future<String> getFdFromAsset(String path);
+  Future closeFd(String path);
   Future free(FFIAsset path);
 }

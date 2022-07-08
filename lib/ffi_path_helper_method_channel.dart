@@ -10,15 +10,26 @@ class MethodChannelFfiPathHelper extends FfiPathHelperPlatform {
   final methodChannel = const MethodChannel('app.polyvox/ffi_path_helper');
 
   @override
-  Future<FFIAsset> load(String path) async {
-    final result = await methodChannel.invokeMethod("load", path);
-    return FFIAsset(result[0], result[1]);
+  Future<FFIAsset> assetToByteArrayPointer(String path) async {
+    final result = await methodChannel.invokeMethod("assetToByteArrayPointer", path);
+    return FFIAsset(result[0], result[1], path);
+  }
+
+  @override
+  Future<String> getFdFromAsset(String path) async {
+    var result = await methodChannel.invokeMethod("getFdFromAsset", path);
+    return result as String;
+  }
+
+  @override
+  Future closeFd(String path) async {
+    return methodChannel.invokeMethod("closeFd", path);
   }
 
   @override
   Future free(FFIAsset asset) async {
-    if (!await methodChannel.invokeMethod("free", asset.data)) {
-      throw Exception("Could not free FFI asset data pointer");
+    if (!await methodChannel.invokeMethod("free", asset.path)) {
+      throw Exception("Could not free FFI asset.");
     }
   }
 }
