@@ -81,6 +81,7 @@ class FfiPathHelperPlugin: FlutterPlugin, MethodCallHandler {
       val key = loader.getLookupKeyForAsset(call.arguments as String)
       val path = extDir!!.path + "/" + key
       free(context.getAssets(), key)
+      result.success(true);
     } else if(call.method == "getFdFromAsset") {
       val loader = FlutterInjector.instance().flutterLoader()
       val extDir = context.getExternalFilesDir(null)
@@ -91,6 +92,7 @@ class FfiPathHelperPlugin: FlutterPlugin, MethodCallHandler {
     } else if(call.method == "closeFd") {
       val parts = (call.arguments as String).split("/")
       closeFd(parts.last().toInt())
+      result.success(true);
     } else {
       result.notImplemented()
     }
