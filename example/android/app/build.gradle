@@ -60,6 +60,9 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    aaptOptions {
+        noCompress "txt"
+    }
 }
 
 flutter {
