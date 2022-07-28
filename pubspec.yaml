@@ -1,4 +1,4 @@
-name: ffi_path_helper
+name: flutter_ffi_asset_helper
 description: A new Flutter plugin project.
 version: 0.0.1
 homepage:
@@ -35,12 +35,12 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.example.ffi_path_helper
-        pluginClass: FfiPathHelperPlugin
+        package: com.example.flutter_ffi_asset_helper
+        pluginClass: FlutterFfiAssetHelperPlugin
       ios:
-        pluginClass: FfiPathHelperPlugin
+        pluginClass: FlutterFfiAssetHelperPlugin
       macos:
-        pluginClass: FfiPathHelperPlugin
+        pluginClass: FlutterFfiAssetHelperPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

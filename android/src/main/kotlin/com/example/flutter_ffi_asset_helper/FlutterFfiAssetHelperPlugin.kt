@@ -1,4 +1,4 @@
-package com.example.ffi_path_helper
+package com.example.flutter_ffi_asset_helper
 
 import androidx.annotation.NonNull
 
@@ -39,8 +39,8 @@ import android.net.LocalSocket
 import android.net.LocalSocketAddress
 import java.io.*
 
-/** FfiPathHelperPlugin */
-class FfiPathHelperPlugin: FlutterPlugin, MethodCallHandler {
+/** FlutterFfiAssetHelperPlugin */
+class FlutterFfiAssetHelperPlugin: FlutterPlugin, MethodCallHandler {
   /// The MethodChannel that will the communication between Flutter and native Android
   ///
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -55,7 +55,7 @@ class FfiPathHelperPlugin: FlutterPlugin, MethodCallHandler {
   external fun closeFd(fd: Int);
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "app.polyvox/ffi_path_helper")
+    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "app.polyvox/flutter_ffi_asset_helper")
     channel.setMethodCallHandler(this)
     context = flutterPluginBinding.applicationContext
   }
@@ -63,7 +63,7 @@ class FfiPathHelperPlugin: FlutterPlugin, MethodCallHandler {
   
   companion object {
     init {
-      System.loadLibrary("ffi_path_helper");
+      System.loadLibrary("flutter_ffi_asset_helper");
     }
   }
 

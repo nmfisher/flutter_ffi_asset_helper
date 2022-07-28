@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-import 'ffi_path_helper_platform_interface.dart';
+import 'flutter_ffi_asset_helper_platform_interface.dart';
 
-/// An implementation of [FfiPathHelperPlatform] that uses method channels.
-class MethodChannelFfiPathHelper extends FfiPathHelperPlatform {
+/// An implementation of [FlutterFfiAssetHelperPlatform] that uses method channels.
+class MethodChannelFlutterFfiAssetHelper extends FlutterFfiAssetHelperPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  final methodChannel = const MethodChannel('app.polyvox/ffi_path_helper');
+  final methodChannel = const MethodChannel('app.polyvox/flutter_ffi_asset_helper');
 
   @override
   Future<FFIAsset> assetToByteArrayPointer(String path) async {

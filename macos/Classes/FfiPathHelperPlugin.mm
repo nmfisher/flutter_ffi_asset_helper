@@ -1,18 +1,18 @@
-#import "FfiPathHelperPlugin.h"
+#import "FlutterFfiAssetHelperPlugin.h"
 #include <iostream>     
 #include <fstream>      
 
 using namespace std;
 
-@implementation FfiPathHelperPlugin {
+@implementation FlutterFfiAssetHelperPlugin {
   NSObject<FlutterPluginRegistrar>* _registrar;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   FlutterMethodChannel* channel = [FlutterMethodChannel
-      methodChannelWithName:@"app.polyvox/ffi_path_helper"
+      methodChannelWithName:@"app.polyvox/flutter_ffi_asset_helper"
             binaryMessenger:[registrar messenger]];
-  FfiPathHelperPlugin* instance = [[FfiPathHelperPlugin alloc] init];
+  FlutterFfiAssetHelperPlugin* instance = [[FlutterFfiAssetHelperPlugin alloc] init];
   [registrar addMethodCallDelegate:instance channel:channel];
   instance->_registrar = registrar;
 }

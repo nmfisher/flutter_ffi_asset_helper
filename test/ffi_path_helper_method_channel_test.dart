@@ -1,10 +1,10 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ffi_path_helper/ffi_path_helper_method_channel.dart';
+import 'package:flutter_ffi_asset_helper/flutter_ffi_asset_helper_method_channel.dart';
 
 void main() {
-  MethodChannelFfiPathHelper platform = MethodChannelFfiPathHelper();
-  const MethodChannel channel = MethodChannel('ffi_path_helper');
+  MethodChannelFlutterFfiAssetHelper platform = MethodChannelFlutterFfiAssetHelper();
+  const MethodChannel channel = MethodChannel('flutter_ffi_asset_helper');
 
   TestWidgetsFlutterBinding.ensureInitialized();
 

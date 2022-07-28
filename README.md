@@ -1,4 +1,4 @@
-# ffi_path_helper
+# flutter_ffi_asset_helper
 
 A Flutter plugin to open assets as either:
 - raw (char pointer) buffers 

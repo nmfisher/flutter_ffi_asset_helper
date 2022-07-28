@@ -1,6 +1,6 @@
-# ffi_path_helper_example
+# flutter_ffi_asset_helper_example
 
-Demonstrates how to use the ffi_path_helper plugin.
+Demonstrates how to use the flutter_ffi_asset_helper plugin.
 
 ## Getting Started
 

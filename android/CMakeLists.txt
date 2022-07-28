@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.4.1)  
 
 add_library( 
-            ffi_path_helper
+            flutter_ffi_asset_helper
             SHARED
-            src/main/cpp/ffi_path_helper.cc
+            src/main/cpp/flutter_ffi_asset_helper.cc
         )
-target_link_libraries(ffi_path_helper -landroid -llog)
+target_link_libraries(flutter_ffi_asset_helper -landroid -llog)
