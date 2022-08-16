@@ -27,16 +27,6 @@ import android.content.Context
 import android.os.ParcelFileDescriptor
 import android.util.Log
 
-import com.sun.jna.Library
-import com.sun.jna.Native
-import com.sun.jna.Pointer
-import com.sun.jna.Structure
-import com.sun.jna.NativeLibrary
-import com.sun.jna.StringArray
-import android.R.attr.path
-
-import android.net.LocalSocket
-import android.net.LocalSocketAddress
 import java.io.*
 
 /** FfiPathHelperPlugin */
