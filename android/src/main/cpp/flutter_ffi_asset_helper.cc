@@ -23,7 +23,7 @@
 
 int guard(int n, char * err) { if (n == -1) { perror(err); exit(1); } return n; }
 
-static const char* _TAG = "ffi_path_helper";
+static const char* _TAG = "flutter_ffi_asset_helper";
 
 using namespace std;
 
@@ -38,7 +38,7 @@ extern "C" {
         off_t len;
     };
 
-    JNIEXPORT jlongArray  JNICALL Java_com_example_ffi_1path_1helper_FfiPathHelperPlugin_getNativePointer(JNIEnv *env, jobject obj,  jobject assetManager, jstring jAssetPath) {
+    JNIEXPORT jlongArray  JNICALL Java_com_example_flutter_1ffi_1asset_1helper_FlutterFfiAssetHelperPlugin_getNativePointer(JNIEnv *env, jobject obj,  jobject assetManager, jstring jAssetPath) {
         const char *path = env->GetStringUTFChars(jAssetPath, 0);
 
         AAssetManager *mgr = AAssetManager_fromJava(env, assetManager);
@@ -87,7 +87,7 @@ extern "C" {
         return longArray;
     }
 
-    JNIEXPORT void JNICALL Java_com_example_ffi_1path_1helper_FfiPathHelperPlugin_free(JNIEnv *env, jobject obj,  jobject assetManager, jstring jAssetPath) {
+    JNIEXPORT void JNICALL Java_com_example_flutter_1ffi_1asset_1helper_FlutterFfiAssetHelperPlugin_free(JNIEnv *env, jobject obj,  jobject assetManager, jstring jAssetPath) {
 
         for (auto it=assets.begin(); it!=assets.end(); ++it)
             __android_log_print(ANDROID_LOG_VERBOSE, _TAG, "asset: %s", it->first.c_str());
@@ -112,12 +112,12 @@ extern "C" {
         return;
     }
 
-    JNIEXPORT jint JNICALL Java_com_example_ffi_1path_1helper_FfiPathHelperPlugin_closeFd(JNIEnv *env, jobject obj,  jobject assetManager, jint fd) {
+    JNIEXPORT jint JNICALL Java_com_example_flutter_1ffi_1asset_1helper_FlutterFfiAssetHelperPlugin_closeFd(JNIEnv *env, jobject obj,  jobject assetManager, jint fd) {
         close((int)fd);
         return 0;
     }
 
-    JNIEXPORT jint JNICALL Java_com_example_ffi_1path_1helper_FfiPathHelperPlugin_getFdFromAsset(JNIEnv *env, jobject obj,  jobject assetManager, jstring jAssetPath) {
+    JNIEXPORT jint JNICALL Java_com_example_flutter_1ffi_1asset_1helper_FlutterFfiAssetHelperPlugin_getFdFromAsset(JNIEnv *env, jobject obj,  jobject assetManager, jstring jAssetPath) {
         const char *path = env->GetStringUTFChars(jAssetPath, 0);
 
         AAssetManager *mgr = AAssetManager_fromJava(env, assetManager);
