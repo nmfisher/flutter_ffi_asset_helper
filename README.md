@@ -1,6 +1,10 @@
-# ffi_path_helper
+# flutter_ffi_asset_helper
 
-A new Flutter plugin project.
+A Flutter plugin to open assets as either:
+- raw (char pointer) buffers 
+- named pipes created via mkfifo (Android only, this is not required on iOS as all assets can be accessed as regular files).
+
+This is generally used when invoking native functions/libraries via FFI that (on Android) require filepaths or that (on Android/iOS) require a pointer to a raw buffer/stream.
 
 ## Getting Started
 

@@ -1,4 +1,4 @@
-group 'com.example.ffi_path_helper'
+group 'com.example.flutter_ffi_asset_helper'
 version '1.0-SNAPSHOT'
 
 buildscript {
@@ -42,6 +42,12 @@ android {
 
     defaultConfig {
         minSdkVersion 16
+    }
+
+      externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
     }
 }
 

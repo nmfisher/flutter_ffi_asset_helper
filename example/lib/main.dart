@@ -1,12 +1,8 @@
 import 'dart:convert';
 import 'dart:ffi';
-
-import 'package:ffi_path_helper/ffi_path_helper_platform_interface.dart';
+import 'package:flutter_ffi_asset_helper/flutter_ffi_asset_helper_platform_interface.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
-import 'package:ffi_path_helper/ffi_path_helper.dart';
+import 'package:flutter_ffi_asset_helper/flutter_ffi_asset_helper.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +16,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _ffiPathHelperPlugin = FfiPathHelper();
+  final _FlutterFfiAssetHelperPlugin = FlutterFfiAssetHelper();
 
   FFIAsset? _asset;
   String? _contents;
@@ -43,7 +39,7 @@ class _MyAppState extends State<MyApp> {
             child: const Text("Load"),
             onPressed: () async {
               _asset =
-                  await _ffiPathHelperPlugin.load("assets/some_test_asset.txt");
+                  await _FlutterFfiAssetHelperPlugin.assetToByteArrayPointer("assets/some_test_asset.txt");
               setState(() {
                 var ptr = Pointer<Char>.fromAddress(_asset!.data);
                 var data = List.generate(
@@ -58,8 +54,15 @@ class _MyAppState extends State<MyApp> {
             onPressed: _asset == null
                 ? null
                 : () async {
-                    await _ffiPathHelperPlugin.free(_asset!);
+                    await _FlutterFfiAssetHelperPlugin.free(_asset!);
                   },
+          ),
+          ElevatedButton(
+            child: const Text("Get file descriptor"),
+            onPressed: () async {
+              var path = await _FlutterFfiAssetHelperPlugin.getFdFromAsset("assets/some_test_asset2.txt");
+              await _FlutterFfiAssetHelperPlugin.closeFd(path);
+            },
           ),
         ]),
       ),

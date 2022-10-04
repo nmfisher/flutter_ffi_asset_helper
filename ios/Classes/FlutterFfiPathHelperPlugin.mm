@@ -1,25 +1,28 @@
-#import "FfiPathHelperPlugin.h"
+#import "FlutterFfiAssetHelperPlugin.h"
 #include <iostream>     
 #include <fstream>      
+#include <map>
 
 using namespace std;
 
-@implementation FfiPathHelperPlugin {
+static map<string, AAsset*> assets;
+
+@implementation FlutterFfiAssetHelperPlugin {
   NSObject<FlutterPluginRegistrar>* _registrar;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   FlutterMethodChannel* channel = [FlutterMethodChannel
-      methodChannelWithName:@"app.polyvox/ffi_path_helper"
+      methodChannelWithName:@"app.polyvox/flutter_ffi_asset_helper"
             binaryMessenger:[registrar messenger]];
-  FfiPathHelperPlugin* instance = [[FfiPathHelperPlugin alloc] init];
+  FlutterFfiAssetHelperPlugin* instance = [[FlutterFfiAssetHelperPlugin alloc] init];
   [registrar addMethodCallDelegate:instance channel:channel];
   instance->_registrar = registrar;
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
 
-    if ([@"load" isEqualToString:call.method]) {
+    if ([@"assetToByteArrayPointer" isEqualToString:call.method]) {
       NSLog(@"Loading asset at asset path %@", call.arguments);
       NSString* assetPath = call.arguments; 
       NSString* key = [_registrar lookupKeyForAsset:assetPath];
@@ -51,11 +54,13 @@ using namespace std;
       // AFAIK the only way to return a pointer via platform channel with a standard codec is to cast to long
       id objects[] = { [NSNumber numberWithLong:(long)buffer], [NSNumber numberWithInt:length] };
 
+      assets.insert({string([nsPath UTF8String]), buffer});
+
       result([NSArray arrayWithObjects:objects count:2]);
       NSLog(@"Successfully loaded asset at %@", call.arguments);
 
   } else if([@"free" isEqualToString:call.method]) {
-    NSLog(@"Freeing data at %lu", [call.arguments intValue]);
+    NSLog(@"Freeing data for path %@", call.arguments);
 
     free( (void*) [call.arguments longValue]);
     result([NSNumber numberWithBool:YES]);
