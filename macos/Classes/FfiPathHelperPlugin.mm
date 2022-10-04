@@ -30,7 +30,6 @@ using namespace std;
         exit(-1);
       }
 #else
-//      Bundle.main.bundlePath +  +
       NSString* nsPath = [NSString stringWithFormat:@"%@/Contents/Frameworks/App.framework/Resources/flutter_assets/%@", [[NSBundle mainBundle] bundlePath], assetPath];
       NSLog(@"Loading MacOS asset path %@", nsPath);
 
