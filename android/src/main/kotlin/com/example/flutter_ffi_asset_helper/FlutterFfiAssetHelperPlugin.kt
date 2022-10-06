@@ -24,10 +24,17 @@ import android.content.res.AssetManager
 import java.io.File
 
 import android.content.Context
+import android.os.Build
 import android.os.ParcelFileDescriptor
 import android.util.Log
+import androidx.annotation.RequiresApi
 
 import java.io.*
+import java.nio.file.FileSystems
+import java.nio.file.Files
+import java.nio.file.Path
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.listDirectoryEntries
 
 /** FlutterFfiAssetHelperPlugin */
 class FlutterFfiAssetHelperPlugin: FlutterPlugin, MethodCallHandler {
@@ -60,23 +67,17 @@ class FlutterFfiAssetHelperPlugin: FlutterPlugin, MethodCallHandler {
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     if (call.method == "assetToByteArrayPointer") {
       val loader = FlutterInjector.instance().flutterLoader()
-      val extDir = context.getExternalFilesDir(null)
       val key = loader.getLookupKeyForAsset(call.arguments as String)
-      val path = extDir!!.path + "/" + key
       val ptr = getNativePointer(context.getAssets(), key)
       result.success(ptr);
     } else if(call.method == "free") {
       val loader = FlutterInjector.instance().flutterLoader()
-      val extDir = context.getExternalFilesDir(null)
       val key = loader.getLookupKeyForAsset(call.arguments as String)
-      val path = extDir!!.path + "/" + key
       free(context.getAssets(), key)
       result.success(true);
     } else if(call.method == "getFdFromAsset") {
       val loader = FlutterInjector.instance().flutterLoader()
-      val extDir = context.getExternalFilesDir(null)
       val key = loader.getLookupKeyForAsset(call.arguments as String)
-      val path = extDir!!.path + "/" + key
       val fd = getFdFromAsset(context.getAssets(), key)
       result.success("/proc/self/fd/${fd}");
     } else if(call.method == "closeFd") {
