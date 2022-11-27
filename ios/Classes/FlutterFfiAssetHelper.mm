@@ -64,6 +64,22 @@ static map<string, char*> assets;
     char* buffer = assets[string([call.arguments UTF8String])];
     free(buffer);
     result([NSNumber numberWithBool:YES]);
+  } else if([@"getFdFromAsset" isEqualToString:call.method]) {
+    NSLog(@"Loading asset at asset path %@", call.arguments);
+    NSString* assetPath = call.arguments; 
+    NSString* key = [_registrar lookupKeyForAsset:assetPath];
+    NSString* nsPath = [[NSBundle mainBundle] pathForResource:key ofType:nil];
+    if(!nsPath) {
+      NSLog(@"Couldn't find asset at path %@", key);
+      exit(-1);
+    }
+    NSLog(@"Successfully resolved asset to filepath at %@", nsPath);
+    result(nsPath);
+  } else if([@"closeFd" isEqualToString:call.method]) {
+    //noop
+    result(@"OK");
+  } else {
+    result(FlutterMethodNotImplemented);
   }
 }
 @end
