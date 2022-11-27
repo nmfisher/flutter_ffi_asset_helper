@@ -29,7 +29,7 @@ flutter:
         package: com.example.flutter_ffi_asset_helper
         pluginClass: FlutterFfiAssetHelperPlugin
       ios:
-        pluginClass: FlutterFfiAssetHelperPlugin
+        pluginClass: FlutterFfiAssetHelper
       macos:
         pluginClass: FlutterFfiAssetHelperPlugin
       windows:

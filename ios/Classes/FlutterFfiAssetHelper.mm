@@ -1,13 +1,13 @@
-#import "FlutterFfiAssetHelperPlugin.h"
+#import "FlutterFfiAssetHelper.h"
 #include <iostream>     
 #include <fstream>      
 #include <map>
 
 using namespace std;
 
-static map<string, AAsset*> assets;
+static map<string, char*> assets;
 
-@implementation FlutterFfiAssetHelperPlugin {
+@implementation FlutterFfiAssetHelper {
   NSObject<FlutterPluginRegistrar>* _registrar;
 }
 
@@ -15,7 +15,7 @@ static map<string, AAsset*> assets;
   FlutterMethodChannel* channel = [FlutterMethodChannel
       methodChannelWithName:@"app.polyvox/flutter_ffi_asset_helper"
             binaryMessenger:[registrar messenger]];
-  FlutterFfiAssetHelperPlugin* instance = [[FlutterFfiAssetHelperPlugin alloc] init];
+  FlutterFfiAssetHelper* instance = [[FlutterFfiAssetHelper alloc] init];
   [registrar addMethodCallDelegate:instance channel:channel];
   instance->_registrar = registrar;
 }
@@ -61,8 +61,8 @@ static map<string, AAsset*> assets;
 
   } else if([@"free" isEqualToString:call.method]) {
     NSLog(@"Freeing data for path %@", call.arguments);
-
-    free( (void*) [call.arguments longValue]);
+    char* buffer = assets[string([call.arguments UTF8String])];
+    free(buffer);
     result([NSNumber numberWithBool:YES]);
   }
 }

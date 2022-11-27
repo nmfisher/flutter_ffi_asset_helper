@@ -10,20 +10,23 @@ import 'flutter_ffi_asset_helper_platform_interface.dart';
 class MethodChannelFlutterFfiAssetHelper extends FlutterFfiAssetHelperPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  final methodChannel = const MethodChannel('app.polyvox/flutter_ffi_asset_helper');
+  final methodChannel =
+      const MethodChannel('app.polyvox/flutter_ffi_asset_helper');
 
   @override
   Future<FFIAsset> assetToByteArrayPointer(String path) async {
-    if(Platform.isWindows) {
+    if (Platform.isWindows) {
       final data = await rootBundle.load(path);
       final ptr = calloc.allocate<Uint8>(data.lengthInBytes);
-      
-      for(int i =0; i < data.lengthInBytes; i++) {
+
+      for (int i = 0; i < data.lengthInBytes; i++) {
         ptr.elementAt(i).value = data.getUint8(i);
       }
-      return FFIAsset(ptr.address, data.lengthInBytes, path);  
+      return FFIAsset(ptr.address, data.lengthInBytes, path);
     } else {
-      return await methodChannel.invokeMethod("assetToByteArrayPointer", path);
+      var result =
+          await methodChannel.invokeMethod("assetToByteArrayPointer", path);
+      return FFIAsset(result[0], result[1], path);
     }
   }
 
@@ -40,7 +43,7 @@ class MethodChannelFlutterFfiAssetHelper extends FlutterFfiAssetHelperPlatform {
 
   @override
   Future free(FFIAsset asset) async {
-    if(Platform.isWindows) {
+    if (Platform.isWindows) {
       calloc.free(Pointer<Uint8>.fromAddress(asset.data));
     } else {
       if (!await methodChannel.invokeMethod("free", asset.path)) {
