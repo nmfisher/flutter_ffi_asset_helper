@@ -1,4 +1,4 @@
-package com.example.flutter_ffi_asset_helper
+package app.polyvox.flutter_ffi_asset_helper
 
 import androidx.annotation.NonNull
 

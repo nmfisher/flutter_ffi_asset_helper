@@ -26,7 +26,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.example.flutter_ffi_asset_helper
+        package: app.polyvox.flutter_ffi_asset_helper
         pluginClass: FlutterFfiAssetHelperPlugin
       ios:
         pluginClass: FlutterFfiAssetHelperPlugin
@@ -34,6 +34,8 @@ flutter:
         pluginClass: FlutterFfiAssetHelperPlugin
       windows:
         pluginClass: FlutterFfiAssetHelperPluginCApi
+      linux:
+        pluginClass: FlutterFfiAssetHelperPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
