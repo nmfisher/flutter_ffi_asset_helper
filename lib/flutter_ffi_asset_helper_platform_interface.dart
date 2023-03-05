@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'flutter_ffi_asset_helper_method_channel.dart';
@@ -16,7 +18,8 @@ abstract class FlutterFfiAssetHelperPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  static FlutterFfiAssetHelperPlatform _instance = MethodChannelFlutterFfiAssetHelper();
+  static FlutterFfiAssetHelperPlatform _instance =
+      MethodChannelFlutterFfiAssetHelper();
 
   /// The default instance of [FlutterFfiAssetHelperPlatform] to use.
   ///

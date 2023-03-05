@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ffi';
+import 'package:flutter/services.dart';
 import 'package:flutter_ffi_asset_helper/flutter_ffi_asset_helper_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ffi_asset_helper/flutter_ffi_asset_helper.dart';
@@ -38,8 +39,10 @@ class _MyAppState extends State<MyApp> {
           ElevatedButton(
             child: const Text("Load"),
             onPressed: () async {
+              // var ptr = ImmutableBuffer.fromAsset("assets/some_test_asset.txt");
               _asset =
-                  await _FlutterFfiAssetHelperPlugin.assetToByteArrayPointer("assets/some_test_asset.txt");
+                  await _FlutterFfiAssetHelperPlugin.assetToByteArrayPointer(
+                      "assets/some_test_asset.txt");
               setState(() {
                 var ptr = Pointer<Char>.fromAddress(_asset!.data);
                 var data = List.generate(
@@ -60,7 +63,8 @@ class _MyAppState extends State<MyApp> {
           ElevatedButton(
             child: const Text("Get file descriptor"),
             onPressed: () async {
-              var path = await _FlutterFfiAssetHelperPlugin.getFdFromAsset("assets/some_test_asset2.txt");
+              var path = await _FlutterFfiAssetHelperPlugin.getFdFromAsset(
+                  "assets/some_test_asset2.txt");
               await _FlutterFfiAssetHelperPlugin.closeFd(path);
             },
           ),
