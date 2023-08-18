@@ -31,6 +31,12 @@ static map<string, char*> assets;
         NSLog(@"Couldn't find asset at path %@", key);
         exit(-1);
       }
+
+      string mapKey([assetPath UTF8String]);
+      if(assets.find(mapKey) != assets.end()) {
+        NSLog(@"WARNING : asset already exists");
+        free(assets[mapKey]);
+      }
       
       ifstream is([nsPath fileSystemRepresentation], ios_base::binary);
       int length = 0;
@@ -53,8 +59,8 @@ static map<string, char*> assets;
       }
       // AFAIK the only way to return a pointer via platform channel with a standard codec is to cast to long
       id objects[] = { [NSNumber numberWithLong:(long)buffer], [NSNumber numberWithInt:length] };
-
-      assets.insert({string([assetPath UTF8String]), buffer});
+      
+      assets.insert({ mapKey , buffer});
 
       result([NSArray arrayWithObjects:objects count:2]);
       NSLog(@"Successfully loaded asset at %@", call.arguments);
@@ -71,7 +77,7 @@ static map<string, char*> assets;
       NSLog(@"Freed data for path %@", call.arguments);
       result([NSNumber numberWithBool:YES]);
     }
-      assets[pathString] = nullptr;
+    assets.erase(pathString);
   } else if([@"getFdFromAsset" isEqualToString:call.method]) {
     NSLog(@"Loading asset at asset path %@", call.arguments);
     NSString* assetPath = call.arguments; 
