@@ -54,16 +54,24 @@ static map<string, char*> assets;
       // AFAIK the only way to return a pointer via platform channel with a standard codec is to cast to long
       id objects[] = { [NSNumber numberWithLong:(long)buffer], [NSNumber numberWithInt:length] };
 
-      assets.insert({string([nsPath UTF8String]), buffer});
+      assets.insert({string([assetPath UTF8String]), buffer});
 
       result([NSArray arrayWithObjects:objects count:2]);
       NSLog(@"Successfully loaded asset at %@", call.arguments);
 
   } else if([@"free" isEqualToString:call.method]) {
-    NSLog(@"Freeing data for path %@", call.arguments);
-    char* buffer = assets[string([call.arguments UTF8String])];
-    free(buffer);
-    result([NSNumber numberWithBool:YES]);
+    NSString* path = call.arguments;
+    string pathString = string([path UTF8String]);
+    char* buffer = assets[pathString];
+    if(!buffer) {
+      NSLog(@"Failed to free data for path %@", call.arguments);
+      result([NSNumber numberWithBool:NO]);
+    } else {
+      free(buffer);
+      NSLog(@"Freed data for path %@", call.arguments);
+      result([NSNumber numberWithBool:YES]);
+    }
+      assets[pathString] = nullptr;
   } else if([@"getFdFromAsset" isEqualToString:call.method]) {
     NSLog(@"Loading asset at asset path %@", call.arguments);
     NSString* assetPath = call.arguments; 

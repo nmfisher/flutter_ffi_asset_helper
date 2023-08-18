@@ -46,7 +46,8 @@ class MethodChannelFlutterFfiAssetHelper extends FlutterFfiAssetHelperPlatform {
     if (Platform.isWindows) {
       calloc.free(Pointer<Uint8>.fromAddress(asset.data));
     } else {
-      if (!await methodChannel.invokeMethod("free", asset.path)) {
+      var result = await methodChannel.invokeMethod("free", asset.path);
+      if (!result) {
         throw Exception("Could not free FFI asset.");
       }
     }
