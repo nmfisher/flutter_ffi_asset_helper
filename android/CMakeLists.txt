@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4.1)  
+cmake_minimum_required(VERSION 3.10)  
 
 add_library( 
             flutter_ffi_asset_helper
