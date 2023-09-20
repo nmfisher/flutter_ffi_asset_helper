@@ -11,30 +11,23 @@ import io.flutter.plugin.common.MethodChannel.Result
 import  io.flutter.embedding.engine.loader.FlutterLoader
 import io.flutter.FlutterInjector
 
-import java.io.FileReader
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.FileNotFoundException
-
 import android.content.res.AssetManager
-
-import java.io.File
 
 import android.content.Context
 import android.os.Build
+import android.system.Os
 import android.os.ParcelFileDescriptor
 import android.util.Log
 import androidx.annotation.RequiresApi
-
 import java.io.*
+
 import java.nio.file.FileSystems
 import java.nio.file.Files
-import java.nio.file.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.Path
+import kotlin.io.path.createDirectories
+
 
 /** FlutterFfiAssetHelperPlugin */
 class FlutterFfiAssetHelperPlugin: FlutterPlugin, MethodCallHandler {
@@ -63,6 +56,15 @@ class FlutterFfiAssetHelperPlugin: FlutterPlugin, MethodCallHandler {
       System.loadLibrary("flutter_ffi_asset_helper");
     }
   }
+  
+  @Throws(IOException::class)
+  private fun copyFile(`in`: InputStream?, out: OutputStream) {
+    val buffer = ByteArray(1024)
+    var read: Int? = null
+    while (`in`?.read(buffer).also({ read = it!! }) != -1) {
+        read?.let { out.write(buffer, 0, it) }
+    }
+  }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     if (call.method == "assetToByteArrayPointer") {
@@ -78,8 +80,36 @@ class FlutterFfiAssetHelperPlugin: FlutterPlugin, MethodCallHandler {
     } else if(call.method == "getFdFromAsset") {
       val loader = FlutterInjector.instance().flutterLoader()
       val key = loader.getLookupKeyForAsset(call.arguments as String)
-      val fd = getFdFromAsset(context.getAssets(), key)
-      result.success("/proc/self/fd/${fd}");
+      val assetManager: AssetManager = context.assets
+
+      var `in`: InputStream? = null
+      var out: OutputStream? = null
+      val outFile = File(context.getExternalFilesDir(null), call.arguments as String)
+
+      Path(outFile.parent).createDirectories()
+      try {
+          `in` = assetManager.open(key)
+          out = FileOutputStream(outFile)
+          copyFile(`in`, out)
+      } catch (e: IOException) {
+          Log.e("tag", "Failed to copy asset file: ${call.arguments}", e)
+      } finally {
+          if (`in` != null) {
+              try {
+                  `in`.close()
+              } catch (e: IOException) {
+                  e.printStackTrace()
+              }
+          }
+          if (out != null) {
+              try {
+                  out.close()
+              } catch (e: IOException) {
+                  e.printStackTrace()
+              }
+          }
+      }
+      result.success(outFile.path);
     } else if(call.method == "closeFd") {
       val parts = (call.arguments as String).split("/")
       closeFd(parts.last().toInt())

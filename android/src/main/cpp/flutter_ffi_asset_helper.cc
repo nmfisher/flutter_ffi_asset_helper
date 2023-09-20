@@ -17,6 +17,9 @@
 #include <android/asset_manager_jni.h>
 #include <sys/sendfile.h>
 #include <stdlib.h>
+#include <android/sharedmem_jni.h>
+#include <sys/mman.h>
+
 
 #include <fcntl.h>
 #include <netinet/in.h>
@@ -117,12 +120,24 @@ extern "C" {
         return 0;
     }
 
+    // DO NOT USE THIS
+    // preserved for posterity only
+    // originally I tried to use /proc/self/fd/{fd} as a proxy after opening the asset (using the FD returned from the NDK API)
+    // this only works on some versions of Android (or some device manufacturers) 
+    // other things I tried:
+    // - /proc/self/fd/{fd} with the fd returned by memfd_create - permissions exception
+    // - /proc/self/fd/{fd} with the fd returned by ASharedMemory_create - permissions exception
+    // - creating a file descriptor in the application tmp dir then calling dup on the above - no permissions exception, but empty
+    // - /proc/self/fd/{fd} with a pipe and then using sendfile - this works, but is flaky because the pipe is not seekable so any consumers trying to reposition the file will error out.
+    // 
+    // However it looks like the security model around memfd_create will be changed so this is probably the way to go in future
+    // Revisit when this is available
     JNIEXPORT jint JNICALL Java_app_polyvox_flutter_1ffi_1asset_1helper_FlutterFfiAssetHelperPlugin_getFdFromAsset(JNIEnv *env, jobject obj,  jobject assetManager, jstring jAssetPath) {
         const char *path = env->GetStringUTFChars(jAssetPath, 0);
 
         AAssetManager *mgr = AAssetManager_fromJava(env, assetManager);
 
-        AAsset *asset = AAssetManager_open(mgr, path, AASSET_MODE_UNKNOWN);
+        AAsset *asset = AAssetManager_open(mgr, path, AASSET_MODE_BUFFER);
         if(asset == NULL) {
             __android_log_print(ANDROID_LOG_VERBOSE, _TAG, "Couldn't locate asset [ %s ]", path);
             return NULL;
@@ -130,35 +145,12 @@ extern "C" {
         off_t start;
         off_t outLength;
         int asset_fd = AAsset_openFileDescriptor(asset, &start, &outLength);
+        
         __android_log_print(ANDROID_LOG_VERBOSE, _TAG, "Opened file descriptor [ %d ] for [ %s ] with start %lld and length %lld", asset_fd, path, (long long)start,(long long) outLength);
 
-        int pipefd[2];
-        
-        if (pipe(pipefd) == -1) {
-            __android_log_print(ANDROID_LOG_ERROR, _TAG,"Error opening pipe : %d", errno);    
-            return NULL;
-        }
-
-         // start a thread for each pipe to avoid blocking 
-         // TODO - threadpool
-        auto f = [](finfo info) {
-            ssize_t written = sendfile(info.fd_out, info.fd_in, &(info.start), info.len);
-            close(info.fd_out);
-            __android_log_print(ANDROID_LOG_ERROR, _TAG,"Sendfile complete, wrote %d from fd %d to fd %d.", written, info.fd_in, info.fd_out);    
-            // AAsset_close(asset);
-        };
-
-        finfo info;
-        info.fd_out = pipefd[1];
-        info.fd_in = asset_fd;
-        info.start = start;
-        info.len = outLength;
-  
-        thread th3(f, info);
-        th3.detach();
-
         env->ReleaseStringUTFChars(jAssetPath, path);
-        return pipefd[0];
+        return asset_fd;       
+        
     }
 
 

@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_ffi_asset_helper/flutter_ffi_asset_helper_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ffi_asset_helper/flutter_ffi_asset_helper.dart';
@@ -42,6 +45,8 @@ class BodyState extends State<Body> {
   @override
   void initState() {
     super.initState();
+    Permission.storage.request();
+    Permission.manageExternalStorage.request();
   }
 
   @override
@@ -76,13 +81,19 @@ class BodyState extends State<Body> {
           onPressed: () async {
             var path = await _FlutterFfiAssetHelperPlugin.getFdFromAsset(
                 "assets/some_test_asset2.txt");
+
             await showDialog(
                 builder: (ctx) {
                   return Center(
-                      child: Container(color: Colors.white, child: Text(path)));
+                      child: Container(
+                          color: Colors.white,
+                          child: Column(children: [
+                            Text(path),
+                            Text(File(path).readAsStringSync().toString())
+                          ])));
                 },
                 context: context);
-            await _FlutterFfiAssetHelperPlugin.closeFd(path);
+            // await _FlutterFfiAssetHelperPlugin.closeFd(path);
           },
         ),
       ]),
