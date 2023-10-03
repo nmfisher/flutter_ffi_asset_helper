@@ -2,7 +2,7 @@ group 'app.polyvox.flutter_ffi_asset_helper'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.6.10'
+    ext.kotlin_version = '1.6.20'
     repositories {
         google()
         mavenCentral()
@@ -41,7 +41,7 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 30
+        minSdkVersion 21
     }
 
       externalNativeBuild {
