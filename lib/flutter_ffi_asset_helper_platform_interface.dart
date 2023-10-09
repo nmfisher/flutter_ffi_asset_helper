@@ -6,6 +6,7 @@ class FFIAsset {
   final int data;
   final int length;
   final String path;
+  bool released = false;
 
   FFIAsset(this.data, this.length, this.path);
 }

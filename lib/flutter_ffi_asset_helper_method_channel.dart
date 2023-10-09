@@ -40,6 +40,9 @@ class MethodChannelFlutterFfiAssetHelper extends FlutterFfiAssetHelperPlatform {
 
   @override
   Future free(FFIAsset asset) async {
+    if(asset.released) {
+      throw Exception("Asset has already been released. You shouldn't have held on to this reference");
+    }
     if(Platform.isWindows) {
       calloc.free(Pointer<Uint8>.fromAddress(asset.data));
     } else {
@@ -47,5 +50,6 @@ class MethodChannelFlutterFfiAssetHelper extends FlutterFfiAssetHelperPlatform {
         throw Exception("Could not free FFI asset.");
       }
     }
+    asset.released = true;
   }
 }
