@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:io';
 import 'package:flutter_ffi_asset_helper/flutter_ffi_asset_helper_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ffi_asset_helper/flutter_ffi_asset_helper.dart';
@@ -60,8 +61,12 @@ class _MyAppState extends State<MyApp> {
           ElevatedButton(
             child: const Text("Get file descriptor"),
             onPressed: () async {
-              var path = await _FlutterFfiAssetHelperPlugin.getFdFromAsset("assets/some_test_asset2.txt");
-              await _FlutterFfiAssetHelperPlugin.closeFd(path);
+              var path = await _FlutterFfiAssetHelperPlugin.assetToFilepath("assets/some_test_asset2.txt");
+              _contents = File(path).readAsStringSync();
+              setState(() {
+                
+              });
+              await _FlutterFfiAssetHelperPlugin.closeFile(path);
             },
           ),
         ]),

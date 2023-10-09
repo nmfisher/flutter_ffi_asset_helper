@@ -28,14 +28,14 @@ class MethodChannelFlutterFfiAssetHelper extends FlutterFfiAssetHelperPlatform {
   }
 
   @override
-  Future<String> getFdFromAsset(String path) async {
-    var result = await methodChannel.invokeMethod("getFdFromAsset", path);
+  Future<String> assetToFilepath(String path) async {
+    var result = await methodChannel.invokeMethod("assetToFilepath", path);
     return result as String;
   }
 
   @override
-  Future closeFd(String path) async {
-    return methodChannel.invokeMethod("closeFd", path);
+  Future closeFile(String path) async {
+    return methodChannel.invokeMethod("closeFile", path);
   }
 
   @override

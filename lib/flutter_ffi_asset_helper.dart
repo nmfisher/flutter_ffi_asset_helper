@@ -5,12 +5,12 @@ class FlutterFfiAssetHelper {
     return FlutterFfiAssetHelperPlatform.instance.assetToByteArrayPointer(assetPath);
   }
 
-  Future<String> getFdFromAsset(String assetPath) {
-    return FlutterFfiAssetHelperPlatform.instance.getFdFromAsset(assetPath);
+  Future<String> assetToFilepath(String assetPath) {
+    return FlutterFfiAssetHelperPlatform.instance.assetToFilepath(assetPath);
   }
 
-  Future closeFd(String assetPath) {
-    return FlutterFfiAssetHelperPlatform.instance.closeFd(assetPath);
+  Future closeFile(String assetPath) {
+    return FlutterFfiAssetHelperPlatform.instance.closeFile(assetPath);
   }
 
   Future free(FFIAsset asset) {

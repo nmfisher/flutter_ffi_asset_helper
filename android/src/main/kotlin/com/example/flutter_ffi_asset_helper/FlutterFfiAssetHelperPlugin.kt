@@ -48,8 +48,8 @@ class FlutterFfiAssetHelperPlugin: FlutterPlugin, MethodCallHandler {
 
   external fun getNativePointer(mgr: AssetManager, path: String) : LongArray;
   external fun free(mgr: AssetManager, path: String);
-  external fun getFdFromAsset(mgr: AssetManager, path: String) : Int;
-  external fun closeFd(fd: Int);
+  external fun assetToFilepath(mgr: AssetManager, path: String) : Int;
+  external fun closeFile(fd: Int);
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "app.polyvox/flutter_ffi_asset_helper")
@@ -75,14 +75,14 @@ class FlutterFfiAssetHelperPlugin: FlutterPlugin, MethodCallHandler {
       val key = loader.getLookupKeyForAsset(call.arguments as String)
       free(context.getAssets(), key)
       result.success(true);
-    } else if(call.method == "getFdFromAsset") {
+    } else if(call.method == "assetToFilepath") {
       val loader = FlutterInjector.instance().flutterLoader()
       val key = loader.getLookupKeyForAsset(call.arguments as String)
-      val fd = getFdFromAsset(context.getAssets(), key)
+      val fd = assetToFilepath(context.getAssets(), key)
       result.success("/proc/self/fd/${fd}");
-    } else if(call.method == "closeFd") {
+    } else if(call.method == "closeFile") {
       val parts = (call.arguments as String).split("/")
-      closeFd(parts.last().toInt())
+      closeFile(parts.last().toInt())
       result.success(true);
     } else {
       result.notImplemented()

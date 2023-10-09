@@ -12,6 +12,12 @@
 
 #include <memory>
 #include <sstream>
+#include <codecvt>
+#include <cstring>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <locale>
 
 #include <MemoryApi.h>
 #include <direct.h>
@@ -44,9 +50,11 @@ FlutterFfiAssetHelperPlugin::~FlutterFfiAssetHelperPlugin() {}
 void FlutterFfiAssetHelperPlugin::HandleMethodCall(
     const flutter::MethodCall<flutter::EncodableValue> &method_call,
     std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
-  if (method_call.method_name().compare("assetToByteArrayPointer") == 0) {
+  
+  // this is just a rough outline for mmap-ing the requested asset/file and returning a pointer to the start of the mapped memory
+  // will throw an error because it wasn't ever actually checked - this is just a skeleton, if you want to implement, test it properly.
+  if (method_call.method_name() == "assetToByteArrayPointer") {
 
-    // mmap the requested file
     const auto *path = std::get_if<std::string>(method_call.arguments());
     char buff[FILENAME_MAX]; // create string buffer to hold path
     GetCurrentDir(buff, FILENAME_MAX);
@@ -77,9 +85,30 @@ void FlutterFfiAssetHelperPlugin::HandleMethodCall(
       result->Error("FAILED", "Empty file?", flutter::EncodableValue(""));
       return;
     }
-    result->Success(flutter::EncodableValue(buf));
-  } else if (method_call.method_name().compare("free") == 0) {
-    
+    // result->Success(flutter::EncodableValue(buf));
+    result->NotImplemented();
+  } else if (method_call.method_name() == "free") {
+    // same as above - need to implement free logic
+    result->NotImplemented();
+  } else if (method_call.method_name() == "assetToFilepath") {
+
+    const auto *assetPath = std::get_if<std::string>(method_call.arguments());
+    std::cout << "Returning filesystem path to asset : " << *assetPath << std::endl;
+    TCHAR pBuf[256];
+    size_t len = sizeof(pBuf);
+    int bytes = GetModuleFileName(NULL, pBuf, (DWORD)len);
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+    std::wstring wAssetPath = converter.from_bytes(*assetPath);
+
+    std::wstring exePathBuf(pBuf);
+    std::filesystem::path exePath(exePathBuf);
+    auto exeDir = exePath.remove_filename();
+    std::filesystem::path targetFilePath = exeDir.wstring() + L"data/flutter_assets/" +
+                            wAssetPath;
+    result->Success(flutter::EncodableValue(targetFilePath.u8string()));
+  } else if (method_call.method_name() == "closeFile") {
+    // noop
+    result->Success(flutter::EncodableValue(true));
   } else {
     result->NotImplemented();
   }

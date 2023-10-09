@@ -33,7 +33,7 @@ abstract class FlutterFfiAssetHelperPlatform extends PlatformInterface {
   }
 
   Future<FFIAsset> assetToByteArrayPointer(String path);
-  Future<String> getFdFromAsset(String path);
-  Future closeFd(String path);
+  Future<String> assetToFilepath(String path);
+  Future closeFile(String path);
   Future free(FFIAsset path);
 }

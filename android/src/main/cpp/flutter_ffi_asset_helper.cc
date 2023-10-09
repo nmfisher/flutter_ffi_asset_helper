@@ -112,12 +112,12 @@ extern "C" {
         return;
     }
 
-    JNIEXPORT jint JNICALL Java_com_example_flutter_1ffi_1asset_1helper_FlutterFfiAssetHelperPlugin_closeFd(JNIEnv *env, jobject obj,  jobject assetManager, jint fd) {
+    JNIEXPORT jint JNICALL Java_com_example_flutter_1ffi_1asset_1helper_FlutterFfiAssetHelperPlugin_closeFile(JNIEnv *env, jobject obj,  jobject assetManager, jint fd) {
         close((int)fd);
         return 0;
     }
 
-    JNIEXPORT jint JNICALL Java_com_example_flutter_1ffi_1asset_1helper_FlutterFfiAssetHelperPlugin_getFdFromAsset(JNIEnv *env, jobject obj,  jobject assetManager, jstring jAssetPath) {
+    JNIEXPORT jint JNICALL Java_com_example_flutter_1ffi_1asset_1helper_FlutterFfiAssetHelperPlugin_assetToFilepath(JNIEnv *env, jobject obj,  jobject assetManager, jstring jAssetPath) {
         const char *path = env->GetStringUTFChars(jAssetPath, 0);
 
         AAssetManager *mgr = AAssetManager_fromJava(env, assetManager);
