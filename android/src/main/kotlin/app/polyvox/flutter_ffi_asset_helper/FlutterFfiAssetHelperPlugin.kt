@@ -80,11 +80,6 @@ class FlutterFfiAssetHelperPlugin: FlutterPlugin, MethodCallHandler {
     } else if(call.method == "assetToFilepath") {
       val loader = FlutterInjector.instance().flutterLoader()
       val key = loader.getLookupKeyForAsset(call.arguments as String)
-<<<<<<< HEAD:android/src/main/kotlin/com/example/flutter_ffi_asset_helper/FlutterFfiAssetHelperPlugin.kt
-      val fd = assetToFilepath(context.getAssets(), key)
-      result.success("/proc/self/fd/${fd}");
-    } else if(call.method == "closeFile") {
-=======
       val assetManager: AssetManager = context.assets
 
       var `in`: InputStream? = null
@@ -116,9 +111,7 @@ class FlutterFfiAssetHelperPlugin: FlutterPlugin, MethodCallHandler {
       }
       result.success(outFile.path);
     } else if(call.method == "closeFd") {
->>>>>>> 6c3edd79e7532ea1cb3efcd980ce212bd8155b24:android/src/main/kotlin/app/polyvox/flutter_ffi_asset_helper/FlutterFfiAssetHelperPlugin.kt
-      val parts = (call.arguments as String).split("/")
-      closeFile(parts.last().toInt())
+      //noop
       result.success(true);
     } else {
       result.notImplemented()
