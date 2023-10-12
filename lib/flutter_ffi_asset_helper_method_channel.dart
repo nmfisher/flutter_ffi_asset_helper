@@ -33,6 +33,10 @@ class MethodChannelFlutterFfiAssetHelper extends FlutterFfiAssetHelperPlatform {
   @override
   Future<String> assetToFilepath(String path) async {
     var result = await methodChannel.invokeMethod("assetToFilepath", path);
+    if (result == null) {
+      throw Exception(
+          "Failed to find filepath for asset : $path (current directory : ${Directory.current.path})");
+    }
     return result as String;
   }
 
@@ -43,8 +47,9 @@ class MethodChannelFlutterFfiAssetHelper extends FlutterFfiAssetHelperPlatform {
 
   @override
   Future free(FFIAsset asset) async {
-    if(asset.released) {
-      throw Exception("Asset has already been released. You shouldn't have held on to this reference");
+    if (asset.released) {
+      throw Exception(
+          "Asset has already been released. You shouldn't have held on to this reference");
     }
     if (Platform.isWindows) {
       calloc.free(Pointer<Uint8>.fromAddress(asset.data));
