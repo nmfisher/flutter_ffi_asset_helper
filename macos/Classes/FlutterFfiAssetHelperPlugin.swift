@@ -13,7 +13,7 @@ public class FlutterFfiAssetHelperPlugin: NSObject, FlutterPlugin {
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
       case "assetToByteArrayPointer":
-        print("Loading asset at asset path \(call.arguments!)");
+        print("Loading asset at asset path \(call.arguments!)")
         let bundle = Bundle.init(identifier: "io.flutter.flutter.app")!
         let path = bundle.path(forResource:call.arguments as! String, ofType: nil, inDirectory: "flutter_assets")
         if(path == nil) {
@@ -35,11 +35,12 @@ public class FlutterFfiAssetHelperPlugin: NSObject, FlutterPlugin {
         _assets[call.arguments as! String] = nil
         result(true)
       case "assetToFilepath":
-        print("Loading asset at asset path \(call.arguments)");
+        let assetPath = call.arguments as! String
+        print("Loading asset at asset path \(assetPath)");
         let bundle = Bundle.init(identifier: "io.flutter.flutter.app")!
-        let path = bundle.path(forResource:call.arguments as! String, ofType: nil, inDirectory: "flutter_assets")
+        let path = bundle.path(forResource:assetPath, ofType: nil, inDirectory: "flutter_assets")
         if(path == nil) {
-          print("File not present in bundle : \(call.arguments)")
+          print("File not present in bundle : \(assetPath)")
         }
         result(path);
       case "closeFile":
