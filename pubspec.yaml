@@ -26,7 +26,7 @@ flutter:
         package: app.polyvox.flutter_ffi_asset_helper
         pluginClass: FlutterFfiAssetHelperPlugin
       ios:
-        pluginClass: FlutterFfiAssetHelper
+        pluginClass: FlutterFfiAssetHelperPlugin
       macos:
         pluginClass: FlutterFfiAssetHelperPlugin
       windows:
